@@ -1,0 +1,308 @@
+import React, { useState, useEffect, useRef } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { ImLocation2 } from "react-icons/im";
+
+const Colleges = () => {
+  const CollegesData = [
+    {
+      id: 1,
+      image: "/images/university/benuniversity.jpeg",
+      heading: "Bennett University",
+      description:
+        "Bennett University is a private university located in Greater Noida, Uttar Pradesh, India. It was established in 2016 with a focus on offering high-quality education",
+      location: " Greater Noida ",
+    },
+    {
+      id: 2,
+      image: "/images/university/upes.jpeg",
+      heading: "UPES, Dehradun",
+      description:
+        "UPES Dehradun Highlights 2024 ; Campus size. 44 acre ; Top accreditations. IACBE, NBA, and with an A Grade by NAAC ; Recognised by. UGC, Bar Council of India.",
+      location: "Dehradun, Uttarakhand",
+    },
+    {
+      id: 3,
+      image: "/images/university/niit.png",
+      heading: "NIIT University Rajastan",
+      description:
+        "NIIT University · NU ranked amongst the top 10 Private Engineering & Technology Universities in India Learn more · NU is organising a virtual EdTech Growth",
+      location: "Rajastan",
+    },
+    {
+      id: 4,
+      image: "/images/university/srm.png",
+      heading: "SRM University Sonepat",
+      description:
+        "SRM University Delhi-NCR, Sonepat have well-planned training programmes to facilitate students with full training & placement assistance in various industries",
+      location: "Haryana",
+    },
+    {
+      id: 5,
+      image: "/images/university/lloyd.png",
+      heading: "Llyod Institute of Engineering",
+      description:
+        "lloyd institute of engineering and technology is one of the best B tech Engineering colleges located in Greater Noida, Delhi NCR.",
+      location: "Greater Noida",
+    },
+    {
+      id: 6,
+      image: "/images/university/iilm.jpeg",
+      heading: "IILM University",
+      description:
+        "IILM University is one of the best private universities in Delhi NCR, India. It offers disciplines like engineering, management, liberal arts.",
+      location: "Greater Noida ",
+    },
+    {
+      id: 7,
+      image: "images/university/sr.png",
+      heading: "S R University",
+      description:
+        "Innovative Curriculum for the Next Generation Graduates. SR University approaches education with a modern mindset. Along with academic excellence,",
+      location: "Telangana",
+    },
+    {
+      id: 8,
+      image: "images/university/dev.jpeg",
+      heading: "Dev Bhoomi University",
+      description:
+        "Dev Bhoomi Uttarakhand University is a non-profit, self-governed organisation that offers unique and advanced academic models designed mainly to train industry.",
+      location: "Uttarakhand",
+    },
+    {
+      id: 9,
+      image: "images/university/doon.png",
+      heading: "Doon Business School",
+      description:
+        "Doon Business School. Rated among top MBA colleges in India and ranked Best MBA College in Uttarakhand with Great Placement & High return",
+      location: "Uttarakhand",
+    },
+    {
+      id: 10,
+      image: "images/university/allance.png",
+      heading: "Alliance University",
+      description:
+        "Alliance University, Bangalore's - Taking Career Aspirations to the Next Level. 600+ Top Corporates as Recruiters for Campus Placement. 92.% Global Professionals Placed. Highly Skilled Faculty. 55+ Green Campus. One of the Top Rank Univ. 20K+ Alumni Across.",
+      location: "Bangalore",
+    },
+  ];
+
+  const [visibleColleges, setVisibleColleges] = useState(6);
+  const [hasMore, setHasMore] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [showList, setShowList] = useState(false);
+
+  const inputRef = useRef(null);
+
+  const handleLoadMore = () => {
+    setVisibleColleges((prevVisibleColleges) => prevVisibleColleges + 6);
+  };
+
+  useEffect(() => {
+    setHasMore(visibleColleges < CollegesData.length);
+  }, [visibleColleges, CollegesData.length]);
+
+  const filteredColleges = CollegesData.filter(
+    (college) =>
+      searchTerm === "" ||
+      college.heading.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleCollegeClick = (college) => {
+    college === ""
+      ? setSelectedCollege(CollegesData)
+      : setSearchTerm(college.heading);
+    setSelectedCollege(college);
+    setShowList(false);
+  };
+
+  const handleInputFocus = () => {
+    setShowList(true);
+  };
+
+  const handleInputBlur = (event) => {
+    const isClickInsideList = event.target.closest(".list-container");
+
+    if (!inputRef.current.contains(event.target) && !isClickInsideList) {
+      setShowList(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleInputBlur);
+    return () => {
+      document.removeEventListener("mousedown", handleInputBlur);
+    };
+  }, []);
+
+  useEffect(() => {
+    setSearchTerm(""); // Reset search term when component unmounts
+    setShowList(false); // Hide the list when component unmounts
+  }, []);
+
+  return (
+    <div className="relative">
+      <div className="flex flex-col justify-center items-center">
+        <h1 className="text-blue-700 text-2xl sm:text-3xl py-4 font-bold">
+          Top Colleges & Universities
+        </h1>
+        <p className="text-gray-500 text-sm text-center sm:text-base px-2 sm:w-[600px]">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos delectus
+          ea ex eligendi odit suscipit fuga dignissimos deleniti sed dolore, ab
+          molestiae neque sapiente, quam aperiam consequuntur sit? Natus,
+          recusandae.
+        </p>
+      </div>
+
+      <div className="w-full min-h-screen flex flex-col items-center justify-center">
+        <div className="text-center md:w-1/3 relative">
+          <div
+            className="max-w-[400px] mt-[2.5rem] mx-auto flex items-center h-12 rounded-lg 
+          shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] focus-within:shadow-lg bg-gray-100 overflow-hidden"
+            ref={inputRef}
+          >
+            <div className="grid place-items-center h-full w-12 text-gray-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+
+            <input
+              className="peer h-full w-full outline-none bg-gray-100 text-sm text-gray-700 pr-2"
+              type="text"
+              id="search"
+              placeholder="Search Colleges.."
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
+            />
+          </div>
+          {showList && (
+            <div className="mt-2 text-left absolute w-full bg-white p-6 rounded-lg list-container shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]">
+              {filteredColleges.length > 0 ? (
+                filteredColleges.map((college) => (
+                  <div
+                    key={college.id}
+                    className="text-gray-600 hover:text-blue-700 font-medium cursor-pointer py-2  "
+                    onClick={() => handleCollegeClick(college)}
+                  >
+                    {college.heading}
+                  </div>
+                ))
+              ) : (
+                <h1 className="text-blue-700 cursor-pointer py-2 left-[3rem]">
+                  No Search Result Found
+                </h1>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="w-full sm:w-[75%] min-h-screen flex items-center justify-center">
+          <div className="px-4 flex justify-center flex-col max-w-[800px] w-full">
+            <InfiniteScroll
+              dataLength={visibleColleges}
+              next={handleLoadMore}
+              hasMore={hasMore}
+              loader={
+                <h4 className="font-semibold text-[1.2rem] py-4 text-gray-400">
+                  Loading...
+                </h4>
+              }
+              endMessage={
+                <p className="font-semibold text-[1.2rem] py-6 text-gray-400">
+                  No more colleges...
+                </p>
+              }
+            >
+              {selectedCollege ? (
+                <div className="mt-[2rem] rounded-lg border flex flex-col md:flex-row justify-center sm:justify-between items-center sm:items-start border-gray-100 bg-[#F8F8FF] p-4 shadow-sm transition hover:shadow-lg sm:p-6">
+                  <div className="mb-4 md:mb-0 md:mr-4  w-[10rem] h-[10rem]">
+                    <img
+                      src={selectedCollege.image}
+                      alt={selectedCollege.heading}
+                      className="h-auto w-full"
+                    />
+                  </div>
+
+                  <div className="text-center flex flex-col sm:items-start items-center justify-center sm:text-start md:w-1/2">
+                    <h3 className="mt-0.5 text-lg font-medium text-gray-900">
+                      {selectedCollege.heading}
+                    </h3>
+                    <p className="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
+                      {selectedCollege.description}
+                    </p>
+                    <p className="mt-2 text-sm/relaxed gap-2 text-gray-500 flex justify-center items-center">
+                      <ImLocation2 /> <p>{selectedCollege.location}</p>
+                    </p>
+                  </div>
+                  <div className="flex gap-2 md:flex-col pt-4">
+                    <button className="px-3 py-2 text-xs font-bold text-white uppercase bg-blue-500 rounded">
+                      Apply
+                    </button>
+                    <button className="px-3 py-2 text-xs font-bold text-white uppercase bg-blue-500 rounded">
+                      Download Brochure
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                filteredColleges.slice(0, visibleColleges).map((college) => (
+                  <div
+                    key={college.id}
+                    className="mt-[2rem] rounded-lg border flex flex-col md:flex-row justify-center sm:justify-between items-center sm:items-start border-gray-100 bg-[#F8F8FF] p-4 shadow-sm transition hover:shadow-lg sm:p-6"
+                  >
+                    <div className="mb-4 md:mb-0 md:mr-4 bg-blue-500 h-[70px] w-[70px] md:h-[150px] md:w-[150px]">
+                      <img
+                        src={college.image}
+                        alt={college.heading}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+
+                    <div className="text-center flex flex-col sm:items-start items-center justify-center sm:text-start md:w-1/2">
+                      <h3 className="mt-0.5 text-lg font-medium text-gray-900">
+                        {college.heading}
+                      </h3>
+                      <p className="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
+                        {college.description}
+                      </p>
+                      <p
+                        className="mt-2 text-sm/relaxed gap-2 text-gray-500 flex items-center justify-center
+                      text-[12px]"
+                      >
+                        <ImLocation2 />{" "}
+                        <p className="pt-1">{college.location}</p>
+                      </p>
+                    </div>
+                    <div className="flex gap-2 md:flex-col pt-4">
+                      <button className="px-3 py-2 text-xs font-bold text-white uppercase bg-blue-500 rounded">
+                        Apply
+                      </button>
+                      <button className="px-3 py-2 text-xs font-bold text-white uppercase bg-blue-500 rounded">
+                        Download Brochure
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </InfiniteScroll>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Colleges;
